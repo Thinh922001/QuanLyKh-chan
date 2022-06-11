@@ -1,0 +1,165 @@
+public LoaiPhong(string _malp,string _tenlp,int _songuoi,int _sogiuong,long _dongia):this()
+        {
+			MaLP = _malp;
+			TenPhong = _tenlp;
+			SoNguoi = _songuoi;
+			SoGiuong = _sogiuong;
+			DonGia = _dongia;
+        }
+
+
+public Tang(int _matang,string _tentang):this()
+        {
+			MATANG = _matang;
+			TenTang = _tentang;
+        }
+
+
+public DatPhong(string _makh,string _maph,DateTime _ngaydat,DateTime _ngayTra,int _songuoio,string _manv,double _tongtien,bool _tinhtrang,bool _theodoan,string _ghichu)
+        {
+			MaKH = _makh;
+			NgayDat = _ngaydat;
+			NgayTra = _ngayTra;
+			SoNguoiO = _songuoio;
+			MaNV = _manv;
+			TongTien = _tongtien;
+			TinhTrang = _tinhtrang;
+			Theodoan = _theodoan;
+			ghichu = _ghichu;
+
+        }
+public KhachHang(string _makh,string _tenkh,string _cc,string _diachi,string _email,string _sdt):this()
+        {
+			MAKH = _makh;
+			TenKH = _tenkh;
+			CMND = _cc;
+			Email = _email;
+			DienThoai = _sdt;
+			DiaChi = _diachi;
+        }
+  void SaveData()
+        {
+            DATPHONG tdp = new DATPHONG();
+            CHITIETDATPHONG1 ct;
+            DATPHONSP dpsp;
+            if (them)
+            {
+
+                DatPhong dp = new DatPhong();
+                dp.NgayDat = DateTime.Now;
+                int sonnt = (int)SoNgayThue.Value;
+                dp.NgayTra = DateTime.Now.AddDays(sonnt);
+                dp.SoNguoiO = (int)soNguoi.Value;
+                dp.TinhTrang = checkThanhToan();
+                dp.MaKH = cboKhachHang.SelectedValue.ToString();
+                dp.TongTien = double.Parse(txtTongTien.Text);
+                dp.ghichu = txtGhiChu.Text;
+                dp.Theodoan = true;
+                dp.MaNV = "NV01";
+                var datp = tdp.Them(dp);
+                _idp = datp.MaDatPhong;
+                for (int i = 0; i < gvDatPhong1.RowCount; i++)
+                {
+                    ct = new CHITIETDATPHONG1();
+                    CHITIETDATPHONG _ct = new CHITIETDATPHONG();
+                    _ct.MaDatPhong = datp.MaDatPhong;
+                    _ct.MAPH = gvDatPhong1.GetRowCellValue(i, "MaPH").ToString();
+                    _ct.DonGia = double.Parse(gvDatPhong1.GetRowCellValue(i, "DONGIA").ToString());
+                    _ct.SoNgayO = (int)SoNgayThue.Value;
+                    _ct.ThanhTien = _ct.DonGia * _ct.SoNgayO;
+                    _ct.Ngay = DateTime.Now;
+                    ct.Them(_ct);
+                    p.UpdateStatusPhong(_ct.MAPH);
+                    if (gridView5.RowCount < 0)
+                    {
+                        dpsp = new DATPHONSP();
+                        DatPhong_SanPham _dpsp = new DatPhong_SanPham();
+                        _dpsp.MAPH = _ct.MAPH;
+                        _dpsp.MaDatPhong = dp.MaDatPhong;
+                        dpsp.Them(_dpsp);
+                    }
+
+                }
+                if (gridView5.RowCount > 0)
+                {
+                    for (int j = 0; j < gridView5.RowCount; j++)
+                    {
+                        dpsp = new DATPHONSP();
+                        DatPhong_SanPham _dpsp = new DatPhong_SanPham();
+                        _dpsp.MaDatPhong = datp.MaDatPhong;
+                        _dpsp.MAPH = gridView5.GetRowCellValue(j, "MaPH").ToString();
+                        _dpsp.Ngay = DateTime.Now;
+                        _dpsp.MASP = gridView5.GetRowCellValue(j, "MASP").ToString();
+                        _dpsp.SoLuong = int.Parse(gridView5.GetRowCellValue(j, "soLuong").ToString());
+                        _dpsp.DonGia = double.Parse(gridView5.GetRowCellValue(j, "donGia").ToString());
+                        _dpsp.ThanhTien = _dpsp.SoLuong * _dpsp.DonGia;
+                        dpsp.Them(_dpsp);
+                    }
+                }
+
+                MessageBox.Show("Đặt phòng thành công");
+                LoadTang();
+                them = !them;
+
+            }
+            else if (sua)
+            {
+                DATPHONG _dp = new DATPHONG();
+                DatPhong dp = _dp.getDatPhong(_idp);
+                dp.NgayDat = DateTime.Now;
+                int sonnt = (int)SoNgayThue.Value;
+                dp.NgayTra = DateTime.Now.AddDays(sonnt);
+                dp.SoNguoiO = (int)soNguoi.Value;
+                dp.TinhTrang = checkThanhToan();
+                dp.MaKH = cboKhachHang.SelectedValue.ToString();
+                dp.TongTien = double.Parse(txtTongTien.Text);
+                dp.ghichu = txtGhiChu.Text;
+                dp.Theodoan = true;
+                dp.MaNV = "NV01";
+
+                var datp = _dp.Edit(dp);
+                ct = new CHITIETDATPHONG1();
+                dpsp = new DATPHONSP();
+                ct.deleteAll(datp.MaDatPhong);
+                dpsp.DeleteAll(datp.MaDatPhong);
+                for (int i = 0; i < gvDatPhong1.RowCount; i++)
+                {
+                    ct = new CHITIETDATPHONG1();
+                    CHITIETDATPHONG _ct = new CHITIETDATPHONG();
+                    _ct.MaDatPhong = datp.MaDatPhong;
+                    _ct.MAPH = gvDatPhong1.GetRowCellValue(i, "MaPH").ToString();
+                    _ct.DonGia = double.Parse(gvDatPhong1.GetRowCellValue(i, "DONGIA").ToString());
+                    _ct.SoNgayO = (int)SoNgayThue.Value;
+                    _ct.ThanhTien = _ct.DonGia * _ct.SoNgayO;
+                    _ct.Ngay = DateTime.Now;
+                    ct.Them(_ct);
+                    p.UpdateStatusPhong(_ct.MAPH);
+                    if (gridView5.RowCount < 0)
+                    {
+                        dpsp = new DATPHONSP();
+                        DatPhong_SanPham _dpsp = new DatPhong_SanPham();
+                        _dpsp.MAPH = _ct.MAPH;
+                        _dpsp.MaDatPhong = dp.MaDatPhong;
+                        dpsp.Them(_dpsp);
+                    }
+
+                }
+                if (gridView5.RowCount > 0)
+                {
+                    for (int j = 0; j < gridView5.RowCount; j++)
+                    {
+                        dpsp = new DATPHONSP();
+                        DatPhong_SanPham _dpsp = new DatPhong_SanPham();
+                        _dpsp.MaDatPhong = datp.MaDatPhong;
+                        _dpsp.MAPH = gridView5.GetRowCellValue(j, "MaPH").ToString();
+                        _dpsp.Ngay = DateTime.Now;
+                        _dpsp.MASP = gridView5.GetRowCellValue(j, "MASP").ToString();
+                        _dpsp.SoLuong = int.Parse(gridView5.GetRowCellValue(j, "soLuong").ToString());
+                        _dpsp.DonGia = double.Parse(gridView5.GetRowCellValue(j, "donGia").ToString());
+                        _dpsp.ThanhTien = _dpsp.SoLuong * _dpsp.DonGia;
+                        dpsp.Them(_dpsp);
+                    }
+                }
+
+            }
+        }

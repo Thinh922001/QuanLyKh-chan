@@ -1,0 +1,52 @@
+ public int MaDatPhong { get; set; }
+        public string MaKH { get; set; }
+        public string Hoten { get; set; }
+        public DateTime? NgayDat { get; set;  }
+        public DateTime? NgayTra { get; set; }
+        public double? soTien { get; set; }
+        public int? soNguoiO { get; set; }
+        public string manv { get; set; }
+        public bool? theoDoan { get; set; }
+        public string ghiChu { get; set; }
+
+
+list.Add(dsp);
+
+load_DatPhong_SanPham();
+
+ DatPhongSanPham dsp = new DatPhongSanPham();
+                dsp.MASP = gridView3.GetFocusedRowCellValue("MASP").ToString();
+                dsp.TenSP = gridView3.GetFocusedRowCellValue("TENSP").ToString();
+                dsp.soLuong = 1;
+                dsp.MaPH = maph;
+                dsp.tenPH = tenph;
+                dsp.donGia = double.Parse(gridView3.GetFocusedRowCellValue("DONGIA").ToString());
+                dsp.thanhTien = dsp.soLuong * dsp.donGia;
+                foreach (var item in list)
+                {
+                    if (item.MaPH == maph && item.MASP == dsp.MASP)
+                    {
+                        item.soLuong += 1;
+                        item.thanhTien = item.soLuong * item.donGia;
+                        load_DatPhong_SanPham();
+                        return;
+                    }
+                }
+                list.Add(dsp);
+   load_DatPhong_SanPham();
+
+
+lấy mã phòng cũ 
+lấy mã phòng mới
+delete datphong,chititedatphong,datphongsp phòng cũ
+tao ra datphong,chititedatphong,datphongsp phòng mới
+insert vào database
+update trạng thái
+
+
+
+
+<appSettings>
+		<!--The license context used-->
+		<add key="EPPlus:ExcelPackage.LicenseContext" value="NonCommercial" />
+	</appSettings>
