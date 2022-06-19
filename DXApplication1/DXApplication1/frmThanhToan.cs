@@ -122,11 +122,11 @@ namespace DXApplication1
             string makh = datphong.MaKH;
             KHACHHANG KH = new KHACHHANG();
             var _kh = kh.getKHfromCode(makh);
-            string content = $@"Cám ơn khách hàng {_kh.TenKH} đã đến đặt phòng khách sạn chúng tôi với mã phòng là {_ct.MAPH,1} và tổng thanh toán là {datphong.TongTien,1} cảm ơn quý khách Hẹn gặp quý khách lần sau";
-            string to = _kh.Email;
-            string from = "lecuongthinh2001@gmail.com";
+           // string content = $@"Cám ơn khách hàng {_kh.TenKH} đã đến đặt phòng khách sạn chúng tôi với mã phòng là {_ct.MAPH,1} và tổng thanh toán là {datphong.TongTien,1} cảm ơn quý khách Hẹn gặp quý khách lần sau";
+          //  string to = _kh.Email;
+          //  string from = "lecuongthinh2001@gmail.com";
             string pass = "0967611122T";
-            SendMail.sendMail(from, to, content, pass);
+          //  SendMail.sendMail(from, to, content, pass);
             MessageBox.Show("Thanh Toán Thành Công");
             objMain.loadTang();
         }
